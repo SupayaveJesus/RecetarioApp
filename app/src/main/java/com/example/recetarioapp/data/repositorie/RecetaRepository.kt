@@ -77,15 +77,13 @@
             }
         }
 
-        fun ingredientesSeleccionado( seleccionados: List<Ingrediente>): List<Receta> {
-            return recetas.filter { receta ->
-                seleccionados.any { ingredienteSeleccionado ->
-                    receta.ingredientes.any { it.nombre == ingredienteSeleccionado.nombre }
-                }
-            }
-
-        }
-
+       fun ingredientesSeleccionado(seleccionados: List<Ingrediente>): List<Receta> {
+           val seleccionadosNormalizados = seleccionados.map { it.nombre.trim().lowercase() }
+           return recetas.filter { receta ->
+               val ingredientesRecetaNormalizados = receta.ingredientes.map { it.nombre.trim().lowercase() }
+               seleccionadosNormalizados.all { ingredientesRecetaNormalizados.contains(it) }
+           }
+       }
         fun getRecetaById(id: Int): Receta? = recetas.find { it.id == id }
 
     }

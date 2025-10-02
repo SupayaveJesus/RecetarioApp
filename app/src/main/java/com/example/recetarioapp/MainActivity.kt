@@ -40,7 +40,7 @@ fun NavigationApp(navController: NavHostController = rememberNavController()) {
         startDestination = NavScreens.BUSCAR.name
     ) {
         composable(NavScreens.BUSCAR.name) {
-            // 🔹 Aquí pasamos el navController real
+
             BuscarRecetaScreen(modifier = Modifier, navController = navController)
         }
         composable("${NavScreens.DETALLE.name}/{id}") { backStackEntry ->

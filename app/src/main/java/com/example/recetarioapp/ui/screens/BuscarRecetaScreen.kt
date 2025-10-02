@@ -22,6 +22,9 @@ fun BuscarRecetaScreen(
     navController: NavController? = null
 ) {
     val ingredientes: List<Ingrediente> = RecetaRepository.ingredientes
+        .map { it.copy(nombre = it.nombre.trim().lowercase()) }
+        .distinctBy { it.nombre }
+
     val seleccionados = vm.ingredientesSeleccionados
     val recetas = vm.Rfiltrados
 
@@ -34,7 +37,6 @@ fun BuscarRecetaScreen(
             Text("Buscar Receta", style = MaterialTheme.typography.titleLarge)
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Ingredientes como botones
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 modifier = Modifier.fillMaxWidth(),
@@ -46,7 +48,9 @@ fun BuscarRecetaScreen(
                     val isSelected = seleccionados.contains(ingrediente.nombre)
 
                     Button(
-                        onClick = { vm.toggleIngrediente(ingrediente.nombre) },
+                        onClick = {
+                            vm.toggleIngrediente(ingrediente.nombre)
+                        },
                         modifier = Modifier.fillMaxWidth(),
                         colors = if (isSelected) {
                             ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
@@ -68,6 +72,11 @@ fun BuscarRecetaScreen(
             ) {
                 Text("Buscar receta")
             }
+            Button(
+                onClick = { navController?.navigate(NavScreens.AGREGAR.name) }
+            ) {
+                Text("Agregar receta")
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -79,7 +88,7 @@ fun BuscarRecetaScreen(
                         onClick = {
                             navController?.navigate(NavScreens.AGREGAR.name)
                         }
-                    ) { // 🔹 opcional
+                    ) {
                         Text("Agregar receta")
                     }
                 } else {
@@ -90,7 +99,7 @@ fun BuscarRecetaScreen(
                                 .fillMaxWidth()
                                 .padding(vertical = 4.dp),
                             onClick = {
-                                navController?.navigate("${NavScreens.DETALLE.name}/${receta.id}") // 🔹 opcional
+                                navController?.navigate("${NavScreens.DETALLE.name}/${receta.id}")
                             }
                         ) {
                             Text(

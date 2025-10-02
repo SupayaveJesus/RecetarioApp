@@ -8,12 +8,14 @@ import androidx.lifecycle.ViewModel
 import com.example.recetarioapp.data.models.Ingrediente
 import com.example.recetarioapp.data.models.Receta
 import com.example.recetarioapp.data.repositorie.RecetaRepository
+import kotlin.collections.addAll
+import kotlin.collections.containsAll
+import kotlin.text.clear
 
 class RecetaViewModel : ViewModel() {
 
     val ingredientesDisponibles = RecetaRepository.ingredientes
 
-    // 👇 observables por Compose
     var ingredientesSeleccionados = mutableStateListOf<String>()
         private set
 
@@ -33,10 +35,13 @@ class RecetaViewModel : ViewModel() {
 
     fun buscarRecetas() {
         Rfiltrados.clear()
+        val seleccionadosNormalizados = ingredientesSeleccionados.map { it.trim().lowercase() }
+        val todasLasRecetas = RecetaRepository.getRecetas()
         Rfiltrados.addAll(
-            RecetaRepository.ingredientesSeleccionado(
-                ingredientesDisponibles.filter { ingredientesSeleccionados.contains(it.nombre) }
-            )
+            todasLasRecetas.filter { receta ->
+                receta.ingredientes.map { it.nombre.trim().lowercase() }
+                    .containsAll(seleccionadosNormalizados)
+            }
         )
         BusquedaRealizada = true
     }
@@ -64,4 +69,6 @@ class RecetaViewModel : ViewModel() {
         Rfiltrados.clear()
         BusquedaRealizada = false
     }
+
+
 }

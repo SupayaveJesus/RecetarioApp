@@ -29,7 +29,7 @@ import com.example.recetarioapp.viewmodels.RecetaViewModel
 @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
 fun AgregarRecetaScreen(
-    navController: NavController? = null, // lo hacemos opcional
+    navController: NavController? = null,
     vm: RecetaViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
     var nombre by remember { mutableStateOf("") }
@@ -93,7 +93,7 @@ fun AgregarRecetaScreen(
                 onClick = {
                     if (nombre.isNotBlank() && ingredientes.isNotEmpty() && instrucciones.isNotBlank()) {
                         vm.addReceta(nombre, ingredientes, instrucciones)
-                        navController?.popBackStack() // vuelve atrás si hay navController
+                        navController?.popBackStack()
                     }
                 },
                 modifier = Modifier

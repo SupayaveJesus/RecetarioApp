@@ -19,7 +19,7 @@ import com.example.recetarioapp.viewmodels.RecetaViewModel
 @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
 fun DetalleRecetaScreen(
-    navController: NavController? = null,   // 🔹 lo hacemos opcional
+    navController: NavController? = null,
     recetaId: Int,
     vm: RecetaViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
@@ -30,7 +30,7 @@ fun DetalleRecetaScreen(
             TopAppBar(
                 title = { Text("Detalle de Receta") },
                 navigationIcon = {
-                    navController?.let { controller ->    // 🔹 solo si existe
+                    navController?.let { controller ->
                         IconButton(onClick = { controller.popBackStack() }) {
                             Text("<")
                         }
@@ -71,6 +71,6 @@ fun DetalleRecetaScreen(
 @Composable
 fun DetalleRecetaScreenPreview() {
     RecetarioAppTheme {
-        DetalleRecetaScreen(recetaId = 1) // 🔹 ya no necesitas navController en preview
+        DetalleRecetaScreen(recetaId = 1)
     }
 }
