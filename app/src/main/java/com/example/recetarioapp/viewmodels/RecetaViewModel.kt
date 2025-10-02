@@ -1,19 +1,27 @@
 package com.example.recetarioapp.viewmodels
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.recetarioapp.data.models.Ingrediente
 import com.example.recetarioapp.data.models.Receta
 import com.example.recetarioapp.data.repositorie.RecetaRepository
-import com.example.recetarioapp.data.repositorie.RecetaRepository.ingredientes
 
 class RecetaViewModel : ViewModel() {
+
     val ingredientesDisponibles = RecetaRepository.ingredientes
 
-    var ingredientesSeleccionados = mutableListOf<String>()
+    // 👇 observables por Compose
+    var ingredientesSeleccionados = mutableStateListOf<String>()
+        private set
 
-    val recetas = RecetaRepository.getRecetas()
+    var Rfiltrados = mutableStateListOf<Receta>()
+        private set
 
-    var Rfiltrados : List<Receta> = emptyList()
+    var BusquedaRealizada by mutableStateOf(false)
+        private set
 
     fun toggleIngrediente(nombre: String) {
         if (ingredientesSeleccionados.contains(nombre)) {
@@ -21,21 +29,25 @@ class RecetaViewModel : ViewModel() {
         } else {
             ingredientesSeleccionados.add(nombre)
         }
-
     }
+
     fun buscarRecetas() {
-        Rfiltrados = RecetaRepository.ingredientesSeleccionado(
-            ingredientesDisponibles.filter { ingredientesSeleccionados.contains(it.nombre) }
+        Rfiltrados.clear()
+        Rfiltrados.addAll(
+            RecetaRepository.ingredientesSeleccionado(
+                ingredientesDisponibles.filter { ingredientesSeleccionados.contains(it.nombre) }
+            )
         )
+        BusquedaRealizada = true
     }
 
-    fun addReceta (
+    fun addReceta(
         nombre: String,
         ingredientes: List<String>,
         instrucciones: String
-    ){
+    ) {
         val newReceta = Receta(
-            id = recetas.size + 1,
+            id = RecetaRepository.getRecetas().size + 1,
             nombre = nombre,
             ingredientes = ingredientes.map { Ingrediente(it) },
             instrucciones = instrucciones
@@ -43,12 +55,13 @@ class RecetaViewModel : ViewModel() {
         RecetaRepository.addReceta(newReceta)
     }
 
-   fun getRecetaById(id: Int): Receta? {
-       return RecetaRepository.getRecetaById(id)
-   }
+    fun getRecetaById(id: Int): Receta? {
+        return RecetaRepository.getRecetaById(id)
+    }
 
     fun clearSeleccion() {
         ingredientesSeleccionados.clear()
-        Rfiltrados = emptyList()
+        Rfiltrados.clear()
+        BusquedaRealizada = false
     }
 }
