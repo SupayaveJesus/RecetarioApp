@@ -60,13 +60,10 @@ fun AgregarRecetaScreen(
                     .padding(16.dp)
                     .fillMaxWidth()
             )
-
             Button(
                 onClick = {
-                    if (newIngrediente.isNotBlank()) {
-                        ingredientes = ingredientes + newIngrediente
-                        newIngrediente = ""
-                    }
+                    ingredientes = vm.agregarIngredienteSinDuplicado(ingredientes, newIngrediente)
+                    newIngrediente = ""
                 },
                 modifier = Modifier.padding(16.dp)
             ) {

@@ -60,6 +60,16 @@ class RecetaViewModel : ViewModel() {
         RecetaRepository.addReceta(newReceta)
     }
 
+    fun agregarIngredienteSinDuplicado(ingredientes: List<String>, nuevo: String): List<String> {
+        val nuevoNormalizado = nuevo.trim().lowercase()
+        val existe = ingredientes.any { it.trim().lowercase() == nuevoNormalizado }
+        return if (nuevoNormalizado.isNotBlank() && !existe) {
+            ingredientes + nuevo.trim()
+        } else {
+            ingredientes
+        }
+    }
+
     fun getRecetaById(id: Int): Receta? {
         return RecetaRepository.getRecetaById(id)
     }
